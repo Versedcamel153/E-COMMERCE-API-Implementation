@@ -1,0 +1,40 @@
+{% extends 'webapp/base.html' %}
+
+{% block title %}
+Review    
+{% endblock %}
+
+{% block content %}
+<form method="post" action="{% url 'submit-review' product.slug %}">
+    {% if messages %}
+            <div class="mt-2">
+                {% for message in messages %}
+                    <div role="alert" class=" w-full max-w-xs alert 
+                        {% if 'success' in message.tags %}
+                            alert-success
+                        {% elif 'error' in message.tags %}
+                            alert-error
+                        {% endif %}
+                    ">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% csrf_token %}
+<div class="rating">
+    <input type="radio" name="rating-2" value="1" class="mask mask-star-2 bg-orange-400" checked />
+    <input type="radio" name="rating-2" value="2" class="mask mask-star-2 bg-orange-400" />
+    <input type="radio" name="rating-2" value="3" class="mask mask-star-2 bg-orange-400" />
+    <input type="radio" name="rating-2" value="4" class="mask mask-star-2 bg-orange-400" />
+    <input type="radio" name="rating-2" value="5" class="mask mask-star-2 bg-orange-400" />
+</div>
+<div>
+    <input type="text" class="textarea textarea-bordered" name="comment"  placeholder="comment" />    
+</div>
+<button class="btn btn-primary w-full" type="submit">
+    submit
+</button>
+</form>
+    
+{% endblock %}

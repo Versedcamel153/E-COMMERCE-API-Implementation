@@ -1,0 +1,63 @@
+{% extends 'webapp/base.html' %}
+
+{% block title %}
+    Orders
+{% endblock %}
+
+{% block content %}
+<p class="text-gray-900 font-bold text-xl text-center">Orders</p>
+
+{% if orders %}
+<div class="flex justify-center items-center min-h-screen px-4 py-6">
+    <div class="max-w-4xl w-full">
+        <div class="flex flex-col md:flex-row md:space-x-6 px-4 py-6 sm:px-6">
+            <div class="flex-1">
+                <ul id="orders" class="-my-6 divide-y divide-gray-200">
+                    {% csrf_token %}
+                    {% for order in orders %}
+                        {% for item in order.items %}
+                            <li class="flex py-6 pr-6">
+                                    <div class="box-border h-32 w-32 p-4 border-4 ...">
+                                        <img src="{{ item.product.images.0.image_url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="ml-4 flex flex-1 flex-col">
+                                        <div class="flex justify-between text-base font-medium text-gray-900">
+                                            <h3 class="truncate">{{ item.product.name }}</h3>
+                                        </div>
+                                        <p class="text-sm">Order #{{ order.id }}</p>
+                                        <a href="{% url 'webapp-order-detail' order.id %}" class="flex w-full">
+                                            <p class="text-xs underline decoration-solid">Details</p>
+                                        </a>
+                                        <div class="flex flex-1 items-end justify-between text-sm">
+                                            <div class="flex flex-row">
+                                                {% if order.status == 'CANCELLED' %}
+                                                    <p>
+                                                        Status:&nbsp;<p class="text-red-500">Cancelled</p>
+                                                    </p>
+                                                {% else %}
+                                                    <button class="font-medium border border-indigo-600 p-1.5 rounded text-indigo-600 hover:text-indigo-500" type="submit" hx-target="body" hx-patch="{% url 'webapp-cancel-order' order.id %}" hx-confirm="Are you sure you wish to cancel your order? All other items with order number &lt;strong&gt;{{order.id}}&lt;/strong&gt; will be cancelled. This action can't be undone.">
+                                                        Cancel Order
+                                                    </button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                            </li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<h1>No Orders Found 🗑️</h1>
+<h3><a href="{% url 'webapp' %}">Start shopping</a></h3>
+{% endif %}
+<script>
+    document.addEventListener("htmx:configRequest", (event) => {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        event.detail.headers['X-CSRFToken'] = csrfToken;
+    });
+</script>
+{% endblock %}

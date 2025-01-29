@@ -1,0 +1,134 @@
+{% extends 'webapp/base.html' %}
+
+{% block title %}
+    {{ product.name }}
+{% endblock %}
+
+{% block content %}
+    
+
+<div class="flex w-full flex-col lg:flex-row h-full p-4">
+        <div class="w-full lg:w-1/2 flex flex-col">
+            <div class="box-border h-80">
+                <img role="button" onclick="my_modal_3.showModal()" id="mainImage" src="{{ product.images.0.image_url }}" class="w-full h-full object-scale-down rounded-lg" alt="{{ product.name }}">
+            </div>
+            <div class="flex flex-row mt-4 justify-center">
+                <div class="grid grid-flow-col w-full overflow-x-auto p-2">
+        
+                {% for image in product.images %}
+                <div class="h-32 w-32 mx-2 border-2 rounded-md hover:border-indigo-900 focus:border-indigo-900">
+                    <img src="{{ image.image_url }}"
+                        class="w-full h-full object-cover rounded cursor-pointer hover:opacity-75 transition-opacity" 
+                        onclick="updateMainImage('{{ image.image_url }}');"
+                        alt="{{ product.name }}">
+                </div>    
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- You can open the modal using ID.showModal() method -->
+<dialog id="my_modal_3" class="modal">
+  <div class="modal-box">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <img id="modalImage" src="{{ product.images.0.image_url }}" class="w-full h-full object-contain rounded-lg" alt="{{ product.name }}">
+  </div>
+</dialog>
+    
+    <div class="hidden lg:divider lg:divider-horizontal"></div>
+
+    <div class="flex min-h-full flex-1 flex-col items-stretch justify-between px-6">
+        <div class="mt-2">
+            <p class="text-2xl font-extrabold">{{ product.name }}</p>
+            <p class="text-2xl text-start lg:p-2">${{ product.price }}</p>
+
+                {% if product.average_rating %}
+                    <div class="rating rating-sm mt-1 lg:p-2">
+                        {% for i in '12345'|make_list %}
+                            {% if forloop.counter <= product.average_rating %}
+                                <input type="radio" name="rating-{{product.id}}" class="mask mask-star-2 bg-yellow-400" checked disabled />
+                            {% else %}
+                                <input type="radio" name="rating-{{product.id}}" class="mask mask-star-2 bg-gray-450" disabled />
+                            {% endif %}
+                        {% endfor %}
+                
+                    <div class="divider divider-horizontal"></div>
+                    <a href="{% url 'webapp-reviews' product.slug %}"> Reviews</a>
+                    </div>
+                {% endif %}
+        </div>
+        <div class="mt-2">
+            <p class="text-xl text-end">Discount</p>
+        </div>
+        <div class="mt-2">
+                <p>{{ product.description }}</p>
+        </div>
+        <form method="post" action="{% url 'webapp-add-to-cart' slug=product.slug %}">
+        <div class="flex flex-col md:flex-row justify-between">
+            <!-- <div class="mt-2 md:order-1 join px-4 py-2">
+                <button class="btn btn-square join-item" type="button" onclick="changeQuantity('decrease')">
+                    <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                <input type="number" name="quantity" id="quantity" value="1" class="input input-bordered w-6 join-item" readonly/>
+                <button class="btn btn-square btn-outline join-item" type="button" onclick="changeQuantity('increase')">
+                    <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div> -->
+           
+            {% csrf_token %}
+            <div class="mt-2 md:order-2 w-full px-4 py-2">
+                <button class="btn btn-primary w-full" type="submit">
+                    Add to cart
+                </button>
+            </div> 
+        </div>
+        </form>
+      </div>
+    </div>
+    
+</div>
+<script>
+    function updateMainImage(url) {
+        document.getElementById('mainImage').src = url;
+        document.getElementById('modalImage').src = url;
+    }
+    </script>
+<script>
+
+    function changeQuantity(action) {
+        let quantityInput = document.getElementById('quantity');
+        let currentQuantity = parseInt(quantityInput.value);
+
+        if (action === 'increase') {
+            quantityInput.value = currentQuantity + 1;
+        } else if (action === 'decrease' && currentQuantity > 1) {
+            quantityInput.value = currentQuantity - 1;
+        }
+    }
+
+</script>
+
+{% endblock %}

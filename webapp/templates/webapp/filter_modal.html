@@ -1,0 +1,30 @@
+<dialog id="my_modal_2" class="modal">
+    <div class="modal-box">
+        <form method="dialog" class="text-end">
+        <button class="btn btn-sm btn-circle btn-ghost">✕</button>
+        </form>
+        <div class=" flex flex-col items-center">
+        <h3 class="text-lg font-bold text-center">Filter</h3>
+        <p class="py-4 text-center">Press ESC key or click on ✕ button to close</p>
+        <form method="get" action="{% url 'webapp-search-results' %}" class="w-full flex flex-col items-center">
+            <select name="category" class="select select-bordered mb-2 w-3/4">
+            <option disabled selected>Select Category</option>
+            <option>Electronics</option>
+            <option>Fashion</option>
+            <option>Home & Garden</option>
+            <option>Sports</option>
+            <option>Health & Beauty</option>
+            </select>
+          <div class="w-3/4 mb-2">
+            <label for="min_price">Min Price: <span id="min_price_value">0</span></label>
+            <input type="range" min="0" max="1000" value="0" class="range range-primary range-xs w-full" name="min_price" id="min_price" oninput="document.getElementById('min_price_value').textContent = this.value" />
+          </div>
+          <div class="w-3/4 mb-2">
+            <label for="max_price">Max Price: <span id="max_price_value">1000</span></label>
+            <input type="range" min="0" max="1000" value="1000" class="range range-primary range-xs w-full" name="max_price" id="max_price" oninput="document.getElementById('max_price_value').textContent = this.value" />
+          </div>
+          <button class="btn mt-4" type="submit">Search</button>
+        </form>
+        </div>
+    </div>
+  </dialog>

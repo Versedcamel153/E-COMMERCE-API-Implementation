@@ -1,0 +1,120 @@
+{% extends 'webapp/base.html' %}
+
+{% block title %}
+    Cart
+{% endblock %}
+
+{% block content %}
+
+<p class="text-gray-900 font-bold text-xl text-center">Cart</p>
+
+{% if cart.items %}
+<div class="flex flex-col md:flex-row md:space-x-6 px-4 py-6 sm:px-6 h-screen overflow-hidden">
+    <!-- Cart Items Section -->
+    
+    <div class="flex-1 h-screen overscroll-contain overflow-y-auto">
+        <ul id="cart" class="-my-6 divide-y divide-gray-200">
+            {% csrf_token %}
+            {% for item in cart.items %}
+                <li class="flex py-6 pr-6">
+                    <div class="box-border h-32 w-32 p-4 border-4 ...">
+                        <!-- Product Image or Details -->
+                        <img src="{{ item.images.0.image_url }}" class="h-full w-full object-cover">
+                    </div>
+                    <div class="ml-4 flex flex-1 flex-col">
+                        <div class="flex justify-between text-base font-medium text-gray-900">
+                            <a href="{% url 'webapp-product-details' item.slug %}"><h3>{{ item.product_name }}</h3></a>
+                            <p class="ml-4">${{ item.total_price }}</p>
+                        </div>
+                        <div class="flex flex-1 items-end justify-between text-sm">
+                            <div class="flex justify-evenly items-center space-x-2">
+                                <svg hx-trigger="click" hx-patch="{% url 'webapp-cart-decrease' item.id %}" hx-target="body" hx-boost="true" role="button" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="border-2 border-solid size-4" onclick="swapSpinner('{{ item.id }}')" id="decrease-btn-{{ item.id }}">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
+                                </svg>
+                                <div class="relative w-8 h-8 flex items-center justify-center">
+                                    <input type="number" class="text-gray-950 text-center absolute inset-0 flex items-center justify-center" id="quantity-{{ item.id }}" name="quantity-{{ item.id }}" value="{{ item.quantity }}" min="1">
+                                    <span class="loading loading-spinner loading-xs hidden absolute bottom-0 top-0 flex items-center justify-center" id="spinner-{{ item.id }}"></span>
+                                </div>
+                                <svg hx-trigger="click" hx-patch="{% url 'webapp-cart-increase' item.id %}" hx-target="body" hx-boost="true" role="button" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="border-2 border-solid size-4" onclick="swapSpinner('{{ item.id }}')" id="increase-btn-{{ item.id }}">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                </svg>
+                            </div>
+                            
+                            <script>
+                                function swapSpinner(itemId) {
+                                    const spinner = document.getElementById(`spinner-${itemId}`);
+                                    const quantityText = document.getElementById(`quantity-${itemId}`);
+                                    const decreaseBtn = document.getElementById(`decrease-btn-${itemId}`);
+                                    const increaseBtn = document.getElementById(`increase-btn-${itemId}`);
+                            
+                                    if (spinner.classList.contains('hidden')) {
+                                        spinner.classList.remove('hidden'); // Show spinner
+                                        quantityText.classList.add('hidden'); // Hide quantity text
+                                        decreaseBtn.classList.add('disabled', 'cursor-not-allowed'); // Disable decrease button
+                                        increaseBtn.classList.add('disabled', 'cursor-not-allowed'); // Disable increase button
+                                        decreaseBtn.setAttribute('disabled', true);
+                                        increaseBtn.setAttribute('disabled', true);
+                                    } else {
+                                        spinner.classList.add('hidden'); // Hide spinner
+                                        quantityText.classList.remove('hidden'); // Show quantity text
+                                        decreaseBtn.classList.remove('disabled', 'cursor-not-allowed'); // Enable decrease button
+                                        increaseBtn.classList.remove('disabled', 'cursor-not-allowed'); // Enable increase button
+                                        decreaseBtn.removeAttribute('disabled');
+                                        increaseBtn.removeAttribute('disabled');
+                                    }
+                                }
+                            </script>
+                            
+                            <style>
+                                .disabled {
+                                    cursor: not-allowed;
+                                    opacity: 0.5;
+                                }
+                            </style>
+
+                            <div class="flex">
+                                <button class="font-medium text-indigo-600 hover:text-indigo-500" hx-delete="{% url 'webapp-cart-item-delete' item.id %}" hx-confirm="Are you sure you wish to remove {{ item.product_name }} from your cart?" hx-target="body" hx-boost="true">
+                                    Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <!-- Subtotal Section -->
+    <div class="flex md:w-1/2 flex-col border-t-4 border-indigo-500">
+        <h3 class="p-4 font-bold text-gray-900">Order Summary</h3>
+        <div class="p-4 -my-6 shadow-lg divide-y divide-gray-200">
+            <div class="flex justify-between py-4">
+                <p>Subtotal</p>
+                <p>${{ cart.total_price }}</p>
+            </div>
+            <div class="flex justify-between py-4">
+                <p>Tax</p>
+                <p>$0{{ cart.tax }}</p>
+            </div>
+            <div class="flex justify-between py-4 font-bold text-gray-900">
+                <p>Order Total</p>
+                <p>${{ cart.total_price }}</p>
+            </div>
+            <form method="post" action="{% url 'webapp-order' %}">
+                {% csrf_token %}
+            <button type="submit" class="btn btn-primary w-full mt-4">Checkout</button>
+        </form>
+        </div>
+    </div>
+</div>
+{% else %}
+<h1>Empty Cart 🗑️</h1>
+<h3><a href="{% url 'webapp' %}">Start shopping</a></h3>
+{% endif %}
+
+<script>
+    document.addEventListener("htmx:configRequest", (event) => {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        event.detail.headers['X-CSRFToken'] = csrfToken;
+    });
+</script>
+{% endblock %}

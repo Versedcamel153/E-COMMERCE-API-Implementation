@@ -1,0 +1,26 @@
+<div class="hidden lg:block dropdown dropdown-bottom ">
+        
+        <label class="input w-full flex items-center gap-2 my-2">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>  
+                
+            <input class="grow" tabindex="0" type="search" name="q" autocomplete="off" placeholder="Search..." hx-get="{% url 'webapp-search' %}" hx-target="#search-results" hx-trigger="keyup changed delay:500ms" hx-indicator=".htmx-indicator"/>
+        <div class="htmx-indicator loading loading-spinner loading-sm h-4 w-4" role="status"></div>
+        </label>
+
+    <div role="listbox" id="search-results" class="dropdown-content menu bg-base-100 rounded-box drop-shadow-xl z-10 p-2 w-full">
+    </div>
+</div>
+
+<script>
+document.querySelector('input[name="q"]').addEventListener('input', function() {
+const searchResults = document.getElementById('search-results');
+if (this.value.trim() !== '') {
+    searchResults.classList.remove('hidden');
+} else {
+    searchResults.classList.add('hidden');
+}
+});
+</script>

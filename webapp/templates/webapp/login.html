@@ -1,0 +1,59 @@
+{% extends 'webapp/base.html' %}
+
+{% block title %}
+  Login
+{% endblock %}
+
+{% block content %}
+
+<div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <form class="space-y-6" method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.GET.next|default:'/webapp'|escape }}"/>
+        <!-- Display non-field errors (e.g., incorrect login) -->
+        {% if messages %}
+            <div class="mt-2">
+                {% for message in messages %}
+                    <div role="alert" class=" w-full max-w-xs alert 
+                        {% if 'success' in message.tags %}
+                            alert-success
+                        {% elif 'error' in message.tags %}
+                            alert-error
+                        {% endif %}
+                    ">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <!-- Email Field -->
+        <div class="mt-2">
+            <input name="email" type="email" placeholder="Email" 
+                   class="input input-bordered w-full max-w-xs" 
+                   autocomplete="email"/>
+        </div>
+
+        <!-- Password Field -->
+        <div class="mt-2">
+            <input name="password" type="password" placeholder="Password" 
+                   class="input input-bordered w-full max-w-xs" 
+                   autocomplete="current-password"/>
+        </div>
+        
+        <div class="text-sm">
+            <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+        </div>
+        
+        <div class="mt-2">
+            <button class="btn btn-primary w-full max-w-xs" type="submit">Sign in</button>
+            <p class="mt-10 text-center text-sm text-gray-500">
+                Don't have an account?
+                <a href="{% url 'register' %}" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Sign up</a>
+            </p>
+        </div>
+    </form>   
+    </div>
+</div>    
+
+{% endblock %}

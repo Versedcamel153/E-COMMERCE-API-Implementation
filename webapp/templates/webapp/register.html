@@ -1,0 +1,57 @@
+{% extends 'webapp/base.html' %}
+
+{% block title %}
+  Register
+{% endblock %}
+
+{% block content %}
+<div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+  <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <form class="space-y-6" method="post">
+        {% csrf_token %}
+
+        <!-- Display non-field errors (e.g., incorrect login) -->
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="mt-2">
+            <input name="username" type="text" placeholder="Username" 
+                   class="input input-bordered w-full max-w-xs" 
+                   autocomplete="username"/>
+        </div>
+
+        
+        <!-- Email Field -->
+        <div class="mt-2">
+          <input name="email" type="email" placeholder="Email" 
+                 class="input input-bordered w-full max-w-xs" 
+                 autocomplete="email"/>
+      </div>
+
+      <div class="mt-2">
+        <input name="password" type="password" placeholder="Password" 
+               class="input input-bordered w-full max-w-xs" 
+               autocomplete="new-password"/>
+      </div>
+        
+      <div class="mt-2">
+            <button class="btn btn-primary w-full max-w-xs" type="submit">Sign Up</button>
+            <p class="mt-10 text-center text-sm text-gray-500">
+                ALready have an account?
+                {{ ' ' }}
+                <a href="{% url 'login' %}" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Sign in</a>
+            </p>
+      </div>
+   
+    </form>        
+    </div>
+</div>    
+
+{% endblock %}

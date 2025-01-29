@@ -1,0 +1,30 @@
+{% extends "webapp/base.html" %}
+
+{% block title %}
+    Search results
+{% endblock %}
+
+{% block content %}
+
+    {% if products %}
+        <ul class="-my-6 divide-y divide-gray-200">
+            {% for product in products %}
+                <li class="flex py-6 pr-6 px-4">
+                    <div class="box-border h-32 w-32 p-4 border-4 ...">
+                        <!-- Product Image or Details -->
+                    </div>
+                    <div class="ml-4 flex flex-1 flex-col">
+                        <div class="flex justify-between text-base font-medium text-gray-900">
+                            <h3>{{ product.name }}</h3>
+                            <p class="ml-4">${{ product.price }}</p>
+                        </div>
+                        <p>{{ product.description }}</p>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No products found.</p>
+    {% endif %}
+
+{% endblock %}
