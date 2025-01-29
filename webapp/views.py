@@ -7,7 +7,7 @@ import requests
 from .models import User
 # Create your views here.
 
-baseURL = 'http://127.0.0.1:8000/api'
+baseURL = 'https://quetzal-keen-infinitely.ngrok-free.app/api'
 
 
 
