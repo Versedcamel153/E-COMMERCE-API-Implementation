@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-^7lx%(^qo9+l%e^ld7^o&ny$@y8pg4axn5k)a-#n=*@ai_m&$@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'quetzal-keen-infinitely.ngrok-free.app', 'https://e-shop-03jm.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'quetzal-keen-infinitely.ngrok-free.app', 'e-shop-03jm.onrender.com']
 
 
 # Application definition
