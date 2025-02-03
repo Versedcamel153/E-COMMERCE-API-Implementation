@@ -4,10 +4,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout, login as auth_login, authenticate
 import requests
+import os
 from .models import User
 # Create your views here.
 
-baseURL = 'https://quetzal-keen-infinitely.ngrok-free.app/api'
+baseURL = os.getenv('BASE_URL')
 
 
 
