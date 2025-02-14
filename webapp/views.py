@@ -15,7 +15,7 @@ baseURL = os.getenv('BASE_URL')
 # token_manager.py
 token = None
 #API_KEY = "KAiepDY3.MCpEp2Kr0QZ8NCUm9ittP4xJuVQBCnpp"
-API_KEY = "KyHmZQhB.78g0PuYQ1IJ9YicQ8v6lAfZMeE8UdBy2"
+API_KEY = os.getenv('API-KEY')
 
 def fetch_token():
     global token
