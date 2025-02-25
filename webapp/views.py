@@ -129,7 +129,7 @@ def add_to_cart(request, slug):
         
 
         payload = {'user_id': user_id, 'product': product_id, 'quantity': quantity}
-        response = requests.post(f"{baseURL}/cart/add/", headers=headers, json=payload, params=params)
+        response = requests.post(f"{baseURL}/cart/add/", headers=headers, json=payload)
 
         if response.status_code == 201:
             messages.success(request, 'Product added to cart')
